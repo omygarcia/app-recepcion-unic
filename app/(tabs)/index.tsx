@@ -1,75 +1,101 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Alert, Image } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function App() {
+  const [facing, setFacing] = useState<CameraType>('back');
+  const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
+  const [qrData, setQrData] = useState<string | null>(null);
 
-export default function HomeScreen() {
+  if (!permission) return <View />;
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>Necesitamos que nos des permiso para ocupar la camara</Text>
+        <Button onPress={requestPermission} title="Dar permisos" />
+      </View>
+    );
+  }
+
+  function toggleCameraFacing() {
+    setFacing((current) => (current === 'back' ? 'front' : 'back'));
+  }
+
+  const handleBarCodeScanned = ({ data }: { data: string }) => {
+    if (!scanned) {
+      setScanned(true);
+      setQrData(data);
+      Alert.alert('Código QR escaneado', data, [
+        { text: 'OK', onPress: () => setScanned(false) },
+      ]);
+    }
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <View style={styles.container}>
+      <CameraView
+        style={StyleSheet.absoluteFillObject}
+        facing={facing}
+        barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
+        onBarcodeScanned={handleBarCodeScanned}
+      />
+      
+      {/* Elementos superpuestos con posicionamiento absoluto */}
+      <View style={styles.overlay}>
+        <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+          <Text style={styles.text}>Rotar Camara</Text>
+        </TouchableOpacity>
+      </View>
+      <Image
+        source={require('./marco_qr_verde.png')}
+        style={{
+            width: 200,
+            height: 200,
+            position: 'absolute',
+            top: '35%',
+            alignSelf: 'center',
+            opacity: 0.9,
+        }}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+  },
+  message: {
+    textAlign: 'center',
+    paddingBottom: 10,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: 8,
+    paddingBottom: 40,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  button: {
+    backgroundColor: '#00000088',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  text: {
+    fontSize: 18,
+    color: 'white',
+  },
+  qrBox: {
     position: 'absolute',
+    top: 50,
+    backgroundColor: '#000000aa',
+    padding: 10,
+    borderRadius: 10,
+  },
+  qrText: {
+    color: 'white',
+    fontSize: 16,
   },
 });

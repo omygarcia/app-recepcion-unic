@@ -6,7 +6,8 @@ import axios from 'axios';
 axios.defaults.baseURL = 'https://backend-recepcion.onrender.com';
 
 type Login = {
-    user:any;
+    user:any|null;
+    loginErrors:any;
     login:(correo:String,password:String)=>void;
     logout:()=>void;
 }
@@ -14,14 +15,26 @@ type Login = {
 export const useLogin = create<Login>(
     persist(
         (set)=>({
-            user:0,
+            user:null,
+            loginErrors:[],
             login:async(correo:String,password:String)=>{
                 try{
                     const {data} = await axios.post('/auth/login',{
                         correo,
                         password
                     });
-                    set((state)=>({user:data}));
+
+                    console.log(data?.errors);
+
+                    if(data?.errors !== undefined)
+                    {
+                        set((state)=>({loginErrors: data?.errors}));
+                        set((state)=>({user:null}));
+                    }
+                    else{
+                        set((state)=>({loginErrors: []}));
+                        set((state)=>({user:data}));
+                    }
                 }
                 catch(error)
                 {

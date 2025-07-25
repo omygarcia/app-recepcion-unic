@@ -7,10 +7,11 @@ import { useLogin } from './store/loginStore';
 
 export default function App() {
   const router = useRouter();
-  const {login,user} = useLogin();
+  const {login,user,loginErrors} = useLogin();
 
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading,setIsloading] = useState(false);
 
   useEffect(()=>{
     setCorreo("luis.ramirez@unic.edu.mx");
@@ -19,8 +20,19 @@ export default function App() {
 
   const login1 = async() => {
     //alert(`Texto enviado: ${correo}`);
-    login(correo,password);
-    router.push('/panel');
+    setIsloading(true);
+    await login(correo,password);
+    console.log('user: ',user);
+    if(user != null)
+    {
+      setIsloading(false);
+      router.push('/panel');
+    }
+    else{
+      setIsloading(false);
+      alert("Revisa tu correo o contraseña");
+    }
+    
   };
 
 
@@ -28,10 +40,11 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <View style={{width:'100%',height:70, backgroundColor:'#ffffff',display:'flex',alignItems:'center'}}>
-            <Image source={require('../assets/images/log-unic.png')} style={{width:170,height:70}} />
+           <Image source={require('../assets/images/log-unic.png')} style={{width:170,height:70}} />
         </View>
         <View style={{width:'100%',padding:10}}>
           <View style={{height:20}} />
+           {isLoading && (<Image source={require('../assets/images/loading-bar-dorado.gif')} style={{width:'90%',height:25}} />)}
           <Text style={styles.titulo1}>Acceso al Sistema</Text>
           <Text style={styles.label}>Correo:</Text>
           <TextInput
@@ -49,7 +62,7 @@ export default function App() {
             onChangeText={setPassword}
             secureTextEntry
           />
-          <TouchableOpacity style={styles.boton} onPress={login1}>
+          <TouchableOpacity style={styles.boton} onPress={login1} disabled={isLoading}>
             <Text style={styles.botonTexto}>Ingresar</Text>
           </TouchableOpacity>
         </View>

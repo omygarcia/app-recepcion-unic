@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "app_recepcion_unic",
+    "name": "App recepcion",
     "slug": "app_recepcion_unic",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.ornisco77.app_recepcion_unic",
+      "permissions": ["INTERNET"]
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +39,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0d640681-d504-44e6-bc51-779d92bfbd54"
+      }
     }
   }
 }

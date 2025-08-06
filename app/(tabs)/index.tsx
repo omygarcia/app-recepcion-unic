@@ -1,16 +1,17 @@
-import useRegistro from '@/hooks/useRegistro';
+
+import { useAsistencia } from '@/hooks/useAsistencia';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Alert, Image } from 'react-native';
 
-useRouter
 export default function App() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [qrData, setQrData] = useState<string | null>(null);
-  const {registar_entrada} = useRegistro();
+
+  const {registar_entrada} = useAsistencia();
   const router = useRouter();
 
   if (!permission) return <View />;
@@ -32,24 +33,13 @@ export default function App() {
     if (!scanned) {
       setScanned(true);
       setQrData(data);
-      const checar = async()=>{
-        const resp = await registar_entrada({codigo_qr:qrData});
-        console.log(resp);
-      }
-
-      checar();
-      
-      Alert.alert('Acceso Correcto!', data, [
-        { 
-          text: 'OK', 
-          onPress: () => {setScanned(false);},
-        },
+      Alert.alert('Código QR escaneado', data, [
+        { text: 'OK', onPress: async() => {
+          await registar_entrada(1);
+          setScanned(false);
+          router.push('/asistencia');
+        } },
       ]);
-    
-      setTimeout(()=>{
-        setScanned(false);
-        router.push('/asistencia');
-      },1000)
     }
   };
 

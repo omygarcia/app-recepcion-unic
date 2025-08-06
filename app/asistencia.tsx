@@ -1,33 +1,52 @@
-import React, { useState } from 'react';import { StatusBar } from 'expo-status-bar';
+import React, { use, useEffect, useState } from 'react';import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useAsistencia } from '@/hooks/useAsistencia';
+import {DataTable} from 'react-native-paper';
 
 
-const encabezados = ['Nombre', 'Edad', 'Correo', 'Teléfono', 'Dirección', 'País'];
+
+const encabezados = ['Fecha', 'Hora Entrada', 'Hora Salida', 'Area', 'Dirección', 'País'];
 const datos = [
   ['Juan', '28', 'juan@mail.com', '555-1234', 'Calle 1', 'México'],
   ['Ana', '32', 'ana@mail.com', '555-5678', 'Calle 2', 'Chile'],
   ['Luis', '25', 'luis@mail.com', '555-9012', 'Calle 3', 'Argentina'],
 ];
 
+type Empleado = {
+  id_empleado:Number,
+  nombres:string,
+  apellidos:string,
+  cargo:string,
+  departamento:string,
+  email:string
+}
 
+type Registro = {
+  id_registro:Number,
+  fecha_cita:string,
+  hora_ingreso:string,
+  hora_salida:string,
+  id_visitante:Number,
+  id_empleado:Number,
+  id_area:Number,
+  empleado:Empleado
+}
 
 export default function App() {
   const router = useRouter();
+  const {listaAsistencia,setListaAsistencia,obtenerLista} = useAsistencia();
+  const [lista,setLista] = useState<Registro[]>([]);
 
-  const [correo, setCorreo] = useState('');
-  const [password, setPassword] = useState('');
-
-  const lectorQR = async() => {
-    //alert(`Texto enviado: ${correo}`);
-    router.push('/(tabs)');
-  };
-
-  const listaAsistencia = async() => {
-    //alert(`Texto enviado: ${correo}`);
-    router.push('/(tabs)');
-  };
+  useEffect(()=>{
+    const cargar = async()=>{
+      const data = await obtenerLista(1);
+      setListaAsistencia(data);
+      setLista(data);
+    }
+    cargar();
+  },[]);
 
 
   return (
@@ -36,27 +55,25 @@ export default function App() {
         <View style={{width:'100%',height:70, backgroundColor:'#ffffff',display:'flex',alignItems:'center'}}>
             <Image source={require('../assets/images/log-unic.png')} style={{width:170,height:70}} />
         </View>
-        <View style={{width:'100%',padding:10}}>
-          <View style={{height:20}} />
-          <Text style={styles.titulo1}>Lista de Asistencia</Text>
-          <View style={{height:10}} />
-            <ScrollView horizontal style={styles.scroll}>
-              <View>
-                <View style={styles.row}>
-                  {encabezados.map((col, i) => (
-                    <Text key={i} style={[styles.cell, styles.header]}>{col}</Text>
-                  ))}
-                </View>
-                {datos.map((fila, i) => (
-                  <View key={i} style={styles.row}>
-                    {fila.map((dato, j) => (
-                      <Text key={j} style={styles.cell}>{dato}</Text>
-                    ))}
-                  </View>
-                ))}
-              </View>
-            </ScrollView>
-        </View>
+        <ScrollView style={{width:'100%'}}>
+            <DataTable>
+              <DataTable.Header>
+                <DataTable.Title>Fecha</DataTable.Title>
+                <DataTable.Title>Hora Entrada</DataTable.Title>
+                <DataTable.Title>Hora Salida</DataTable.Title>
+                <DataTable.Title>Empleado</DataTable.Title>
+              </DataTable.Header>
+
+              {lista.map((usuario, index) => (
+                <DataTable.Row key={index}>
+                  <DataTable.Cell>{usuario.fecha_cita}</DataTable.Cell>
+                  <DataTable.Cell>{usuario.hora_ingreso}</DataTable.Cell>
+                  <DataTable.Cell>{usuario.hora_salida}</DataTable.Cell>
+                  <DataTable.Cell>{usuario.empleado.nombres} {usuario.empleado.apellidos}</DataTable.Cell>
+                </DataTable.Row>
+              ))}
+            </DataTable>
+        </ScrollView>
         <StatusBar style="auto" />
       </SafeAreaView>
     </SafeAreaProvider>

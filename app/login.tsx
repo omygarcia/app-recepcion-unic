@@ -14,7 +14,7 @@ export default function App() {
   const [isLoading,setIsloading] = useState(false);
 
   useEffect(()=>{
-    setCorreo("luis.ramirez@unic.edu.mx");
+    setCorreo("sistemas.ayto.puebla@gmail.com");
     setPassword("123456");
   },[]);
 
@@ -40,7 +40,7 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <View style={{width:'100%',height:70, backgroundColor:'#ffffff',display:'flex',alignItems:'center'}}>
-           <Image source={require('../assets/images/log-unic.png')} style={{width:170,height:70}} />
+          <Image source={require('../assets/images/log-unic.png')} style={{width:170,height:70}} />
         </View>
         <View style={{width:'100%',padding:10}}>
           <View style={{height:20}} />

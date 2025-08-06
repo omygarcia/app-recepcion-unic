@@ -8,10 +8,7 @@ import { useLogin } from './store/loginStore';
 export default function App() {
   const router = useRouter();
 
-  const {user} = useLogin();
-
-  const [correo, setCorreo] = useState('');
-  const [password, setPassword] = useState('');
+  const {user, logout} = useLogin();
 
   useEffect(()=>{
     console.log('user: ',user);
@@ -27,12 +24,20 @@ export default function App() {
     router.push('/asistencia');
   };
 
+  const actionLogout = async() =>{
+      await logout();
+      router.push('/login');
+  }
+
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <View style={{width:'100%',height:70, backgroundColor:'#ffffff',display:'flex',alignItems:'center'}}>
             <Image source={require('../assets/images/log-unic.png')} style={{width:170,height:70}} />
+            <TouchableOpacity onPress={actionLogout}>
+                <Text>Salir</Text>
+            </TouchableOpacity>
         </View>
         <View style={{width:'100%',padding:10}}>
           <View style={{height:20}} />

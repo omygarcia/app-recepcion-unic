@@ -24,6 +24,16 @@ export default function App() {
     router.push('/asistencia');
   };
 
+  const registroVisitante = async() => {
+    //alert(`Texto enviado: ${correo}`);
+    router.push('/registro');
+  };
+
+  const scannerVisitante = async() => {
+    //alert(`Texto enviado: ${correo}`);
+    router.push('/scanner');
+  };
+
   const actionLogout = async() =>{
       await logout();
       router.push('/login');
@@ -44,7 +54,7 @@ export default function App() {
           <Text style={styles.titulo1}>Panel de Administración</Text>
           <Text style={styles.titulo1}>Bienvenido(a): {user?.usuario?.nombres}</Text>
           <View style={{height:10}} />
-          <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around'}}>
+          <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
             <TouchableOpacity style={styles.botonPanel} onPress={lectorQR}>
               <Image source={require('../assets/images/panel/qrcode_scan_icon96.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
@@ -56,6 +66,35 @@ export default function App() {
               <Text style={styles.botonTexto}>Asistencia</Text>
             </TouchableOpacity>
           </View>
+          <View style={{height:10}} />
+          {user != null && user.usuario.rol == 'ADMIN'?(
+            <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
+            <TouchableOpacity style={styles.botonPanel} onPress={registroVisitante}>
+              <Image source={require('../assets/images/panel/addusergroup_1251.png')} style={{width:70,height:70}} />
+              <View style={{height:10}} />
+              <Text style={styles.botonTexto}>Registro Visitante</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botonPanel} onPress={scannerVisitante}>
+              <Image source={require('../assets/images/panel/barcode_scanner_4249.png')} style={{width:70,height:70}} />
+              <View style={{height:10}} />
+              <Text style={styles.botonTexto}>Scannear Visitante</Text>
+            </TouchableOpacity>
+          </View>
+          ):(<View style={{height:10}} />)}
+          {user != null && user.usuario.rol == 'ADMIN'?(
+            <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
+            <TouchableOpacity style={styles.botonPanel} onPress={registroVisitante}>
+              <Image source={require('../assets/images/panel/users_12820.png')} style={{width:70,height:70}} />
+              <View style={{height:10}} />
+              <Text style={styles.botonTexto}>Registro Usuarios</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botonPanel} onPress={scannerVisitante}>
+              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
+              <View style={{height:10}} />
+              <Text style={styles.botonTexto}>Documentos</Text>
+            </TouchableOpacity>
+          </View>
+          ):(<View style={{height:10}} />)}
         </View>
         <StatusBar style="auto" />
       </SafeAreaView>

@@ -4,6 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAsistencia } from '@/hooks/useAsistencia';
 import {DataTable} from 'react-native-paper';
+import { useLogin } from '@/store/loginStore';
 
 
 
@@ -38,10 +39,12 @@ export default function App() {
   const router = useRouter();
   const {listaAsistencia,setListaAsistencia,obtenerLista} = useAsistencia();
   const [lista,setLista] = useState<Registro[]>([]);
+  const {user} = useLogin();
 
   useEffect(()=>{
     const cargar = async()=>{
-      const data = await obtenerLista(1);
+      const id = user.id_empleado || 1;
+      const data = await obtenerLista(id);
       setListaAsistencia(data);
       setLista(data);
     }

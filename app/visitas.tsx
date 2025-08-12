@@ -1,10 +1,11 @@
-import React, {  useEffect, useState } from 'react';import { StatusBar } from 'expo-status-bar';
+import React, { use, useEffect, useState } from 'react';import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAsistencia } from '@/hooks/useAsistencia';
 import {DataTable} from 'react-native-paper';
 import { useLogin } from '@/store/loginStore';
+import useVisitante from '@/hooks/useVisitante';
 
 
 
@@ -15,42 +16,24 @@ const datos = [
   ['Luis', '25', 'luis@mail.com', '555-9012', 'Calle 3', 'Argentina'],
 ];
 
-type Empleado = {
-  id_empleado:Number,
-  nombres:string,
-  apellidos:string,
-  cargo:string,
-  departamento:string,
-  email:string
-}
 
-type Registro = {
-  id_registro:Number,
-  fecha_cita:string,
-  hora_ingreso:string,
-  hora_salida:string,
-  id_visitante:Number,
-  id_empleado:Number,
-  id_area:number,
-  empleado:Empleado
-}
+
 
 export default function App() {
   const router = useRouter();
-  const {listaAsistencia,setListaAsistencia,obtenerLista} = useAsistencia();
-  const [lista,setLista] = useState<Registro[]>([]);
+  const {listaVisitas,setVisitas,visitas,agregar_visitante} = useVisitante();
   const {user} = useLogin();
 
   useEffect(()=>{
     const cargar = async()=>{
-      console.log('USER: ',user);
       const id = user?.usuario?.id_empleado || 1;
-      const data = await obtenerLista(id);
-      setListaAsistencia(data);
-      setLista(data);
+      const data = await listaVisitas();
+      setVisitas(data);
     }
     cargar();
   },[]);
+
+  
 
 
   return (
@@ -62,18 +45,18 @@ export default function App() {
         <ScrollView style={{width:'100%'}}>
             <DataTable>
               <DataTable.Header>
-                <DataTable.Title>Fecha</DataTable.Title>
-                <DataTable.Title>Hora Entrada</DataTable.Title>
-                <DataTable.Title>Hora Salida</DataTable.Title>
-                <DataTable.Title>Empleado</DataTable.Title>
+                <DataTable.Title>Nombre</DataTable.Title>
+                <DataTable.Title>E-mail</DataTable.Title>
+                <DataTable.Title>Telefono</DataTable.Title>
+                <DataTable.Title>Motivo Visita</DataTable.Title>
               </DataTable.Header>
 
-              {lista.map((usuario, index) => (
+              {visitas.map((visit, index) => (
                 <DataTable.Row key={index}>
-                  <DataTable.Cell>{usuario.fecha_cita}</DataTable.Cell>
-                  <DataTable.Cell>{usuario.hora_ingreso}</DataTable.Cell>
-                  <DataTable.Cell>{usuario.hora_salida}</DataTable.Cell>
-                  <DataTable.Cell>{usuario.empleado.nombres} {usuario.empleado.apellidos}</DataTable.Cell>
+                  <DataTable.Cell>{visit.nombres} {visit.apellidos}</DataTable.Cell>
+                  <DataTable.Cell>{visit.email}</DataTable.Cell>
+                  <DataTable.Cell>{visit.telefono}</DataTable.Cell>
+                  <DataTable.Cell>{visit.motivo_visita}</DataTable.Cell>
                 </DataTable.Row>
               ))}
             </DataTable>

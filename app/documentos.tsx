@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Linking } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useLogin } from './store/loginStore';
 import { push } from 'expo-router/build/global-state/routing';
-
 
 export default function App() {
   const router = useRouter();
@@ -20,14 +19,14 @@ export default function App() {
     router.push('/(tabs)');
   };
 
-  const listaAsistencia = async() => {
+  const openCartelInformativo = async() => {
     //alert(`Texto enviado: ${correo}`);
-    router.push('/asistencia');
+    Linking.openURL('https://drive.google.com/file/d/13yPFC3p67q_9QO-nnIg_naeRKL_sv1ra/view?usp=sharing');
   };
 
-  const registroVisitante = async() => {
+  const openSolicitudServicios = async() => {
     //alert(`Texto enviado: ${correo}`);
-    router.push('/registro');
+    Linking.openURL('https://drive.google.com/file/d/1HoB1dXYDEAKoFTTpLpW3MBGbswRhVZPT/view?usp=sharing');
   };
 
   const scannerVisitante = async() => {
@@ -44,10 +43,6 @@ export default function App() {
       router.push('/visitas');
   }
 
-  const goDocumentos = async() =>{
-      router.push('/documentos');
-  }
-
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -59,31 +54,31 @@ export default function App() {
         </View>
         <View style={{width:'100%',padding:10}}>
           <View style={{height:20}} />
-          <Text style={styles.titulo1}>Panel de Administración</Text>
+          <Text style={styles.titulo1}>Documentos Unic</Text>
           <Text style={styles.titulo1}>Bienvenido(a): {user?.usuario?.nombres}</Text>
           <View style={{height:10}} />
           <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
-            <TouchableOpacity style={styles.botonPanel} onPress={lectorQR}>
-              <Image source={require('../assets/images/panel/qrcode_scan_icon96.png')} style={{width:70,height:70}} />
+            <TouchableOpacity style={styles.botonPanel} onPress={openCartelInformativo}>
+              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
-              <Text style={styles.botonTexto}>Checar</Text>
+              <Text style={styles.botonTexto}>Cartel Informativo</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.botonPanel} onPress={listaAsistencia}>
-              <Image source={require('../assets/images/panel/list_notes_930.png')} style={{width:70,height:70}} />
+            <TouchableOpacity style={styles.botonPanel} onPress={openSolicitudServicios}>
+              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
-              <Text style={styles.botonTexto}>Asistencia</Text>
+              <Text style={styles.botonTexto}>Solicitud de Servicios</Text>
             </TouchableOpacity>
           </View>
           <View style={{height:10}} />
           {user != null && user.usuario.rol == 'ADMIN'?(
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
-            <TouchableOpacity style={styles.botonPanel} onPress={registroVisitante}>
-              <Image source={require('../assets/images/panel/addusergroup_1251.png')} style={{width:70,height:70}} />
+            <TouchableOpacity style={styles.botonPanel} onPress={openCartelInformativo}>
+              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
               <Text style={styles.botonTexto}>Registro Visitante</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.botonPanel} onPress={scannerVisitante}>
-              <Image source={require('../assets/images/panel/barcode_scanner_4249.png')} style={{width:70,height:70}} />
+              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
               <Text style={styles.botonTexto}>Scannear Visitante</Text>
             </TouchableOpacity>
@@ -93,11 +88,11 @@ export default function App() {
           {user != null && user.usuario.rol == 'ADMIN'?(
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
             <TouchableOpacity style={styles.botonPanel} onPress={goListaVisitas}>
-              <Image source={require('../assets/images/panel/users_12820.png')} style={{width:70,height:70}} />
+              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
               <Text style={styles.botonTexto}>Lista Visitantes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.botonPanel} onPress={goDocumentos}>
+            <TouchableOpacity style={styles.botonPanel} onPress={goListaVisitas}>
               <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
               <Text style={styles.botonTexto}>Documentos</Text>

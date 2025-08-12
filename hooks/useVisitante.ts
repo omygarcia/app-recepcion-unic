@@ -1,18 +1,41 @@
 import { useLogin } from '@/app/store/loginStore';
 import axios from 'axios';
-import { useState } from 'react';
-
-const {user} = useLogin();
+import { useEffect, useState } from 'react';
 
 
-axios.defaults.headers.common.Authorization = 'Bearer ';
+type Visitante = {
+  id_visitante:string,
+  id_tipovisitante:string,
+  nombres: string,
+  apellidos: string,
+  genero: string,
+  telefono: string,
+  email: string,
+  motivo_visita: string,
+}
 
-const useRegistro = () =>{
-    const [registros,setRegistros] = useState([]);
-    const [misRegistros,setMisRegistros] = useState([]);
-    const listaraRegistros = async()=>{
+
+const useVisitante = () =>{
+    const [visitas,setVisitas] = useState<Visitante[]>([]);
+    const {user} = useLogin();
+
+    const listaVisitas = async()=>{
         try{
-            const {data} = await axios.get('/registro');
+            const {data} = await axios.get('/visitante');
+            console.log('data',data);
+            return data;
+        }
+        catch(error)
+        {
+            console.log("ERROR: ");
+            console.log(error);
+            return [];
+        }
+    }
+
+    const agregar_visitante = async(form:any)=>{
+         try{
+            const {data} = await axios.post('/visitante/create',form);
             console.log('data',data);
             return data;
         }
@@ -39,13 +62,11 @@ const useRegistro = () =>{
     }
 
     return{
-        listaraRegistros,
-        setRegistros,
-        registros,
-        registar_entrada,
-        misRegistros,
-        setMisRegistros
+        listaVisitas,
+        visitas,
+        setVisitas,
+        agregar_visitante
     }
 }
 
-export default useRegistro;
+export default useVisitante;

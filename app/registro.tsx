@@ -4,12 +4,14 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useLogin } from './store/loginStore';
 import { Picker } from '@react-native-picker/picker';
+import useVisitante from '@/hooks/useVisitante';
 
 
 
 export default function App() {
   const router = useRouter();
   const {login,user,loginErrors} = useLogin();
+  const {agregar_visitante} = useVisitante();
 
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
@@ -25,6 +27,31 @@ export default function App() {
     email:"",
     motivo_visita:""
   });
+
+  const nuevo_visitante = async()=>{
+    try {
+      await agregar_visitante(form);
+      alert('El visitante se registro con exito!');
+      limpiar();
+      router.push('/visitas');
+    } catch (error) {
+      alert('No se pudo registrar el visitante');
+    }
+    
+  }
+
+  const limpiar = ()=>{
+    setForm({
+      id_visitante:"",
+      id_tipovisitante:"",
+      nombres:"",
+      apellidos:"",
+      genero:"",
+      telefono:"",
+      email:"",
+      motivo_visita:""
+    });
+  }
 
   useEffect(()=>{
     setCorreo("sistemas.ayto.puebla@gmail.com");
@@ -114,7 +141,7 @@ export default function App() {
             value={form.motivo_visita}
             onChangeText={(value)=>setForm({...form,motivo_visita:value})}
           />
-          <TouchableOpacity style={styles.boton} onPress={login1} disabled={isLoading}>
+          <TouchableOpacity style={styles.boton} onPress={nuevo_visitante} disabled={isLoading}>
             <Text style={styles.botonTexto}>Registrar</Text>
           </TouchableOpacity>
         </View>

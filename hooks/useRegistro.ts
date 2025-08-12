@@ -2,7 +2,7 @@ import { useLogin } from '@/app/store/loginStore';
 import axios from 'axios';
 import { useState } from 'react';
 
-const {user} = useLogin();
+
 
 
 axios.defaults.headers.common.Authorization = 'Bearer ';
@@ -10,9 +10,17 @@ axios.defaults.headers.common.Authorization = 'Bearer ';
 const useRegistro = () =>{
     const [registros,setRegistros] = useState([]);
     const [misRegistros,setMisRegistros] = useState([]);
-    const listaraRegistros = async()=>{
+    const {user} = useLogin();
+    const listarRegistros = async()=>{
         try{
-            const {data} = await axios.get('/registro');
+            const {data} = await axios.get('/registro/usuario/'+user.usuario.id_empleado,
+                {
+                    headers:{
+                        Authorization:"Bearer "+user.token
+                    }
+                }
+            );
+             console.log('id: ',user.usuario.id_empleado);
             console.log('data',data);
             return data;
         }
@@ -26,7 +34,11 @@ const useRegistro = () =>{
 
     const registar_entrada = async(form:any)=>{
          try{
-            const {data} = await axios.post('/registro/registar-entrada',form);
+            const {data} = await axios.post('/registro/registar-entrada',form,{
+                headers:{
+                    Authorization:"Bearer "+user.usuario.token
+                }
+            });
             console.log('data',data);
             return data;
         }
@@ -39,7 +51,7 @@ const useRegistro = () =>{
     }
 
     return{
-        listaraRegistros,
+        listarRegistros,
         setRegistros,
         registros,
         registar_entrada,

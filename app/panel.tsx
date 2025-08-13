@@ -103,7 +103,13 @@ export default function App() {
               <Text style={styles.botonTexto}>Documentos</Text>
             </TouchableOpacity>
           </View>
-          ):(<View style={{height:10}} />)}
+          ):(<View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
+            <TouchableOpacity style={styles.botonPanel} onPress={goDocumentos}>
+              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
+              <View style={{height:10}} />
+              <Text style={styles.botonTexto}>Documentos</Text>
+            </TouchableOpacity>
+          </View>)}
         </View>
         <StatusBar style="auto" />
       </SafeAreaView>

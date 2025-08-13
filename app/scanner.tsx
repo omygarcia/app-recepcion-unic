@@ -35,9 +35,9 @@ export default function App() {
       setQrData(data);
       Alert.alert('Código QR escaneado', data, [
         { text: 'OK', onPress: async() => {
-          await registar_entrada(1);
+          await registar_entrada(data);
           setScanned(false);
-          router.push('/asistencia');
+          router.push('/visitas');
         } },
       ]);
     }

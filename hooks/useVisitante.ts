@@ -61,11 +61,24 @@ const useVisitante = () =>{
         }
     }
 
+    const eliminar_visita = async(id:string)=>{
+        try {
+            const {data}  = await axios.delete('/visitante/delete/'+id);
+            console.log('data',data);
+            return data;
+        } catch (error) {
+             console.log("ERROR: ");
+            console.log(error);
+            return [];
+        }
+    }
+
     return{
         listaVisitas,
         visitas,
         setVisitas,
-        agregar_visitante
+        agregar_visitante,
+        eliminar_visita
     }
 }
 

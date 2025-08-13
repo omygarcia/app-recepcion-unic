@@ -21,7 +21,7 @@ const datos = [
 
 export default function App() {
   const router = useRouter();
-  const {listaVisitas,setVisitas,visitas,agregar_visitante} = useVisitante();
+  const {listaVisitas,setVisitas,visitas,agregar_visitante,eliminar_visita} = useVisitante();
   const {user} = useLogin();
 
   useEffect(()=>{
@@ -34,6 +34,18 @@ export default function App() {
   },[]);
 
   
+  const delete_visitante = async(id:string)=>{
+    try {
+      await eliminar_visita(id);
+      alert('se elimino el visitante con exito!');
+      const data = await listaVisitas();
+      setVisitas(data);
+    } catch (error) {
+      console.log(error);
+      alert('No se pudo eliminar el visitante');
+    }
+    
+  }
 
 
   return (
@@ -49,6 +61,7 @@ export default function App() {
                 <DataTable.Title>E-mail</DataTable.Title>
                 <DataTable.Title>Telefono</DataTable.Title>
                 <DataTable.Title>Motivo Visita</DataTable.Title>
+                <DataTable.Title>Acciones</DataTable.Title>
               </DataTable.Header>
 
               {visitas.map((visit, index) => (
@@ -57,6 +70,11 @@ export default function App() {
                   <DataTable.Cell>{visit.email}</DataTable.Cell>
                   <DataTable.Cell>{visit.telefono}</DataTable.Cell>
                   <DataTable.Cell>{visit.motivo_visita}</DataTable.Cell>
+                  <DataTable.Cell>
+                     <TouchableOpacity style={{backgroundColor:'#d51c35'}}  onPress={()=> delete_visitante(visit.id_visitante)}>
+                        <Text style={styles.botonTexto}>Eliminar</Text>
+                      </TouchableOpacity>
+                  </DataTable.Cell>
                 </DataTable.Row>
               ))}
             </DataTable>

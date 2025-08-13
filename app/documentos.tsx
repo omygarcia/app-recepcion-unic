@@ -29,9 +29,9 @@ export default function App() {
     Linking.openURL('https://drive.google.com/file/d/1HoB1dXYDEAKoFTTpLpW3MBGbswRhVZPT/view?usp=sharing');
   };
 
-  const scannerVisitante = async() => {
+  const openModulosDetallados = async() => {
     //alert(`Texto enviado: ${correo}`);
-    router.push('/scanner');
+    Linking.openURL('https://docs.google.com/document/d/1yCtUoWzyFqmc2SsG7XpPro2M4jApi9dL/edit?usp=sharing&ouid=112692167205747745358&rtpof=true&sd=true');
   };
 
   const actionLogout = async() =>{
@@ -39,8 +39,8 @@ export default function App() {
       router.push('/login');
   }
 
-  const goListaVisitas = async() =>{
-      router.push('/visitas');
+  const openConvenio = async() =>{
+      Linking.openURL('https://docs.google.com/document/d/11tZ25v3C979IlmoXngTKLRt8sRlv89B3/edit?usp=sharing&ouid=112692167205747745358&rtpof=true&sd=true');
   }
 
   return (
@@ -72,30 +72,15 @@ export default function App() {
           <View style={{height:10}} />
           {user != null && user.usuario.rol == 'ADMIN'?(
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
-            <TouchableOpacity style={styles.botonPanel} onPress={openCartelInformativo}>
+            <TouchableOpacity style={styles.botonPanel} onPress={openModulosDetallados}>
               <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
-              <Text style={styles.botonTexto}>Registro Visitante</Text>
+              <Text style={styles.botonTexto}>Modulos Detallados</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.botonPanel} onPress={scannerVisitante}>
+            <TouchableOpacity style={styles.botonPanel} onPress={openConvenio}>
               <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
               <View style={{height:10}} />
-              <Text style={styles.botonTexto}>Scannear Visitante</Text>
-            </TouchableOpacity>
-          </View>
-          ):(<View style={{height:10}} />)}
-           <View style={{height:10}} />
-          {user != null && user.usuario.rol == 'ADMIN'?(
-            <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
-            <TouchableOpacity style={styles.botonPanel} onPress={goListaVisitas}>
-              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
-              <View style={{height:10}} />
-              <Text style={styles.botonTexto}>Lista Visitantes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.botonPanel} onPress={goListaVisitas}>
-              <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
-              <View style={{height:10}} />
-              <Text style={styles.botonTexto}>Documentos</Text>
+              <Text style={styles.botonTexto}>Convenio a Marzo 2025</Text>
             </TouchableOpacity>
           </View>
           ):(<View style={{height:10}} />)}

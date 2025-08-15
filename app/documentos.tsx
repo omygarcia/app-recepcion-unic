@@ -70,7 +70,6 @@ export default function App() {
             </TouchableOpacity>
           </View>
           <View style={{height:10}} />
-          {user != null && user.usuario.rol == 'ADMIN'?(
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',flexWrap:'nowrap'}}>
             <TouchableOpacity style={styles.botonPanel} onPress={openModulosDetallados}>
               <Image source={require('../assets/images/panel/folder_my_documents_15435.png')} style={{width:70,height:70}} />
@@ -83,7 +82,6 @@ export default function App() {
               <Text style={styles.botonTexto}>Convenio a Marzo 2025</Text>
             </TouchableOpacity>
           </View>
-          ):(<View style={{height:10}} />)}
         </View>
         <StatusBar style="auto" />
       </SafeAreaView>
